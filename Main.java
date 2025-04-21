@@ -16,24 +16,25 @@ public class Main {
             System.out.println("Не возможно посчитать размер отпускных. Дата начала отпуска позже даты окончания.");
         } else {
         System.out.println("Размер отпускных: " + calculationOfVacationPay(salaryFor12Months,
-                calculatingNumberVacationDays(vacationStartDate, vacationEndDate)));
+                calculatingNumberVacationDays(vacationStartDate, vacationEndDate)) + " рублей.");
     }}
     
     public static double enteringTheAmount() {
         System.out.print("Введите сумму заработной платы за последние 12 месяцев: ");
+        Scanner in = new Scanner(System.in);
         try {
-            Scanner in = new Scanner(System.in);
-            return in.nextDouble();
+            double amount = in.nextDouble();
+            return amount;
         } catch (java.util.NoSuchElementException e) {
             System.out.println("Не верный формат ввода суммы заработной платы.");
             return enteringTheAmount();
-        }
+        }  
     }
     
     public static LocalDate enteringTheDate(String message) {
         System.out.print(message);
+        Scanner in = new Scanner(System.in);
         try {
-            Scanner in = new Scanner(System.in);
             String strDate = in.next();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             LocalDate Date = LocalDate.parse(strDate, formatter);
