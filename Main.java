@@ -11,7 +11,6 @@ public class Main {
         LocalDate vacationEndDate;
         salaryFor12Months = enteringTheAmount();
         vacationStartDate = enteringTheDate("Введите дату начала отпуска в формате 'дд.мм.гггг': ");
-        System.out.println(vacationStartDate);
         vacationEndDate = enteringTheDate("Введите дату окончания отпуска в формате 'дд.мм.гггг': ");
         if (vacationStartDate.isAfter(vacationEndDate)) {
             System.out.println("Не возможно посчитать размер отпускных. Дата начала отпуска позже даты окончания.");
