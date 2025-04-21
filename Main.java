@@ -7,45 +7,67 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         double salaryFor12Months;
-        String vacationStartDate;
-        String vacationEndDate;
-        try (Scanner in = new Scanner(System.in)) {
-            System.out.print("Введите сумму заработной платы за последние 12 месяцев: ");
-            salaryFor12Months = in.nextDouble();
-            System.out.print("Введите дату начала отпуска в формате 'дд.мм.гггг': ");
-            vacationStartDate = in.next();
-            System.out.print("Введите дату окончания отпуска в формате 'дд.мм.гггг': ");
-            vacationEndDate = in.next();
+        LocalDate vacationStartDate;
+        LocalDate vacationEndDate;
+        salaryFor12Months = enteringTheAmount();
+        vacationStartDate = enteringTheDate("Введите дату начала отпуска в формате 'дд.мм.гггг': ");
+        System.out.println(vacationStartDate);
+        vacationEndDate = enteringTheDate("Введите дату окончания отпуска в формате 'дд.мм.гггг': ");
+        if (vacationStartDate.isAfter(vacationEndDate)) {
+            System.out.println("Не возможно посчитать размер отпускных. Дата начала отпуска позже даты окончания.");
+        } else {
+        System.out.println("Размер отпускных: " + calculationOfVacationPay(salaryFor12Months,
+                calculatingNumberVacationDays(vacationStartDate, vacationEndDate)));
+    }}
+    
+    public static double enteringTheAmount() {
+        System.out.print("Введите сумму заработной платы за последние 12 месяцев: ");
+        try {
+            Scanner in = new Scanner(System.in);
+            return in.nextDouble();
+        } catch (java.util.NoSuchElementException e) {
+            System.out.println("Не верный формат ввода суммы заработной платы.");
+            return enteringTheAmount();
         }
-        System.out.println("Размер отпускных: " + calculationOfVacationPay(salaryFor12Months, calculatingNumberVacationDays(vacationStartDate, vacationEndDate)));
     }
     
-
+    public static LocalDate enteringTheDate(String message) {
+        System.out.print(message);
+        try {
+            Scanner in = new Scanner(System.in);
+            String strDate = in.next();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            LocalDate Date = LocalDate.parse(strDate, formatter);
+            return Date;
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("Не верный формат ввода даты.");
+            return enteringTheDate(message);
+        }
+    }
+    
     public static double calculationOfVacationPay(double salaryFor12Months, int numberOfVacationDays) {
         double amountOfVacationPay = Math.round(salaryFor12Months / 12 / 29.3 * numberOfVacationDays * 100);
         return amountOfVacationPay / 100;
     }
 
-    public static int calculatingNumberVacationDays(String vacationStartDate, String vacationEndDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        LocalDate startDate = LocalDate.parse(vacationStartDate, formatter);
-        LocalDate endDate = LocalDate.parse(vacationEndDate, formatter);
-        int numberCalendarDays = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
+    public static int calculatingNumberVacationDays(LocalDate vacationStartDate, LocalDate vacationEndDate) {
+        int numberCalendarDays = (int) ChronoUnit.DAYS.between(vacationStartDate, vacationEndDate) + 1;
         String[] listHolidayDates = new String[] { "01.01.", "02.01.", "03.01.", "04.01.", "05.01.", "06.01.", "07.01.",
                 "08.01.", "23.02.", "08.03.", "01.05.", "09.05.", "12.06.", "04.11." };
-        int yearHheStartOfVacation = startDate.getYear();
+        int yearHheStartOfVacation = vacationStartDate.getYear();
         int numberHolidayDates = 0;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         for (String holidayDate : listHolidayDates) {
             LocalDate date = LocalDate.parse(holidayDate + yearHheStartOfVacation, formatter);
-            if (date.isAfter(startDate.minusDays(1)) && date.isBefore(endDate.plusDays(1))) {
+            if (date.isAfter(vacationStartDate.minusDays(1)) && date.isBefore(vacationEndDate.plusDays(1))) {
                 numberHolidayDates += 1;
             }
         }
-        int yearHheEndOfVacation = endDate.getYear();
+        int yearHheEndOfVacation = vacationEndDate.getYear();
         if (yearHheStartOfVacation != yearHheEndOfVacation){
             for (String holidayDate : listHolidayDates) {
                 LocalDate date = LocalDate.parse(holidayDate + yearHheEndOfVacation, formatter);
-                if (date.isAfter(startDate.minusDays(1)) && date.isBefore(endDate.plusDays(1))) {
+                if (date.isAfter(vacationStartDate.minusDays(1)) && date.isBefore(vacationEndDate.plusDays(1))) {
                     numberHolidayDates += 1;
                 }
         }
