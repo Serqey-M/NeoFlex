@@ -15,8 +15,8 @@ public class Main {
         if (vacationStartDate.isAfter(vacationEndDate)) {
             System.out.println("Не возможно посчитать размер отпускных. Дата начала отпуска позже даты окончания.");
         } else {
-            System.out.println("Размер отпускных: " + calculationOfVacationPay(salaryFor12Months,
-                    calculatingNumberVacationDays(vacationStartDate, vacationEndDate)));
+            int numberVacationDays = calculatingNumberVacationDays(vacationStartDate, vacationEndDate);
+            System.out.println("Размер отпускных за " + numberVacationDays + " дней " + calculationOfVacationPay(salaryFor12Months, numberVacationDays) + " рублей.");
         }
     }
     
