@@ -9,39 +9,42 @@ public class Main {
         double salaryFor12Months;
         LocalDate vacationStartDate;
         LocalDate vacationEndDate;
-        salaryFor12Months = enteringTheAmount();
-        vacationStartDate = enteringTheDate("Введите дату начала отпуска в формате 'дд.мм.гггг': ");
-        vacationEndDate = enteringTheDate("Введите дату окончания отпуска в формате 'дд.мм.гггг': ");
+        salaryFor12Months = enteringTheAmount(scan);
+        vacationStartDate = enteringTheDate("Введите дату начала отпуска в формате 'дд.мм.гггг': ", scan);
+        vacationEndDate = enteringTheDate("Введите дату окончания отпуска в формате 'дд.мм.гггг': ", scan);
         if (vacationStartDate.isAfter(vacationEndDate)) {
             System.out.println("Не возможно посчитать размер отпускных. Дата начала отпуска позже даты окончания.");
         } else {
-        System.out.println("Размер отпускных: " + calculationOfVacationPay(salaryFor12Months,
-                calculatingNumberVacationDays(vacationStartDate, vacationEndDate)) + " рублей.");
-    }}
-    
-    public static double enteringTheAmount() {
-        System.out.print("Введите сумму заработной платы за последние 12 месяцев: ");
-        Scanner in = new Scanner(System.in);
-        try {
-            double amount = in.nextDouble();
-            return amount;
-        } catch (java.util.NoSuchElementException e) {
-            System.out.println("Не верный формат ввода суммы заработной платы.");
-            return enteringTheAmount();
-        }  
+            System.out.println("Размер отпускных: " + calculationOfVacationPay(salaryFor12Months,
+                    calculatingNumberVacationDays(vacationStartDate, vacationEndDate)));
+        }
     }
     
-    public static LocalDate enteringTheDate(String message) {
-        System.out.print(message);
-        Scanner in = new Scanner(System.in);
+    public static final Scanner scan = new Scanner(System.in);
+
+    public static double enteringTheAmount(Scanner scan) {
+        System.out.print("Введите сумму заработной платы за последние 12 месяцев: ");
         try {
-            String strDate = in.next();
+            double x = scan.nextDouble();
+            scan.nextLine();
+
+            return x;
+        } catch (java.util.NoSuchElementException e) {
+            System.out.println("Не верный формат ввода суммы заработной платы.");
+            return enteringTheAmount(scan);
+        } 
+    }
+    
+    public static LocalDate enteringTheDate(String message, Scanner scan) {
+        System.out.print(message);
+        try {
+            String strDate = scan.nextLine();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             LocalDate Date = LocalDate.parse(strDate, formatter);
             return Date;
         } catch (java.time.format.DateTimeParseException e) {
             System.out.println("Не верный формат ввода даты.");
-            return enteringTheDate(message);
+            return enteringTheDate(message, scan);
         }
     }
     
